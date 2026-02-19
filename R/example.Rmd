@@ -10,7 +10,7 @@ output:
       collapsed: true
     toc_depth: 2
   markdown:
-    wrap: 72
+    wrap: 72 
 
 ---
 
