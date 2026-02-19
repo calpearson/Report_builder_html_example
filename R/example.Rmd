@@ -42,19 +42,15 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 # Secton3
 ## Epidemiological Summary {.tabset}
 
-### info 1
+### Interactive plot
 ```{r, echo=FALSE}
 library(tidyverse)
-
-ggplot(mtcars, aes(x = factor(am), y = mpg)) +
-  geom_boxplot() +
-  scale_x_discrete(labels = c("Automatic", "Manual")) +
-  labs(
-    title = "MPG by Transmission Type",
-    x = "Transmission",
-    y = "Miles per Gallon"
-  ) +
-  theme_minimal()
+library(plotly)
+ggplotly(
+  ggplot(mtcars, aes(x = hp, y = mpg, text = paste("Car:", rownames(mtcars), "<br>Cylinders:", cyl))) +
+    geom_point(aes(color = factor(cyl))) +
+    geom_smooth(method = "lm")
+)
 ```
 
 
@@ -82,5 +78,88 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
     y = "Miles per Gallon"
   ) +
   theme_minimal()
+```
+
+### Interactive table
+```{r interactive-table, echo=FALSE}
+library(DT)
+
+# Create a filterable table for mtcars
+datatable(
+  mtcars,
+  options = list(
+    pageLength = 10,     # Number of rows per page
+    autoWidth = TRUE,    # Adjust column width automatically
+    scrollX = TRUE       # Enable horizontal scrolling if needed
+  ),
+  filter = "top",        # Adds filter boxes at the top of each column
+  rownames = TRUE         # Keep car names
+)
+```
+
+## Download data (csv)
+```{r download-data, results='asis', echo=FALSE, warning=FALSE}
+library(htmltools)
+
+# Save CSV in the same folder
+write.csv(mtcars, "mtcars_data.csv", row.names = TRUE)
+
+# Provide a download link
+tags$a(
+  href = "mtcars_data.csv",
+  download = "mtcars_data.csv",
+  "Click here to download the data as CSV"
+)
+```
+
+## Download data Button (csv)
+```{r download-button, echo=FALSE, results='asis', warning=FALSE}
+library(htmltools)
+
+# Save CSV to the same folder
+write.csv(mtcars, "mtcars_data.csv", row.names = TRUE)
+
+# Create a download button
+tags$button(
+  type = "button",
+  class = "btn btn-primary",  # Bootstrap style (works if your HTML uses bootstrap)
+  onclick = "window.location.href='mtcars_data.csv'",
+  "Download Data.csv"
+)
+
+```
+
+## Download data (xlsx)
+```{r, echo=FALSE, results='asis', warning=FALSE}
+library(openxlsx)
+library(dplyr)
+library(htmltools)
+
+# Create a new Excel workbook
+wb <- createWorkbook()
+
+# --- Sheet 1: mtcars ---
+addWorksheet(wb, "mtcars")
+writeData(wb, sheet = "mtcars", mtcars, rowNames = TRUE)
+
+# --- Sheet 2: iris ---
+addWorksheet(wb, "iris")
+writeData(wb, sheet = "iris", iris, rowNames = FALSE)
+
+# --- Save workbook ---
+saveWorkbook(wb, "multi_tab_report.xlsx", overwrite = TRUE)
+
+# --- Add download button in HTML ---
+tags$button(
+  type = "button",
+  class = "btn btn-success",
+  onclick = "window.location.href='multi_tab_report.xlsx'",
+  "Download Excel Report"
+)
+
+headerStyle <- createStyle(fontColour = "#FFFFFF", fgFill = "#4F81BD", halign = "center", textDecoration = "Bold")
+addStyle(wb, "mtcars", headerStyle, rows = 1, cols = 1:ncol(mtcars), gridExpand = TRUE)
+addStyle(wb, "iris", headerStyle, rows = 1, cols = 1:ncol(iris), gridExpand = TRUE)
+
 ```
 
