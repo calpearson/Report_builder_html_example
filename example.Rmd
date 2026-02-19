@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+author: "callum pearson"
+date: "2026-02-19"
+output:
+  html_document:
+    css: html_ukhsa.css # this needs to be in the same folder as the rmd file / the jpeg needs to be inside the same folder i.e. the UKHSA logo :) //  the html_ukhsa.css file can be opened in notes. you can change the image if you like here.
+    toc: yes # this states that you should have a menu bar on the left.
+    toc_float:
+      collapsed: true
+    toc_depth: 2
+  markdown:
+    wrap: 72
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Section1
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+# Section2
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+# Secton3
+## Epidemiological Summary {.tabset}
+
+### info 1
+```{r, echo=FALSE}
+library(tidyverse)
+
+ggplot(mtcars, aes(x = factor(am), y = mpg)) +
+  geom_boxplot() +
+  scale_x_discrete(labels = c("Automatic", "Manual")) +
+  labs(
+    title = "MPG by Transmission Type",
+    x = "Transmission",
+    y = "Miles per Gallon"
+  ) +
+  theme_minimal()
+```
+
+
+### info 2
+```{r, echo=FALSE}
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(
+    title = "MPG by Number of Cylinders",
+    x = "Cylinders",
+    y = "Miles per Gallon"
+  ) +
+  theme_minimal()
+```
+
+
+### info 3
+```{r, echo=FALSE}
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Fuel Efficiency vs Horsepower",
+    x = "Horsepower",
+    y = "Miles per Gallon"
+  ) +
+  theme_minimal()
+```
+
